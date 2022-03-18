@@ -2,30 +2,30 @@
 
 namespace App\Repository;
 
-use App\Entity\CobanTest;
+use App\Entity\TrackEvent;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method CobanTest|null find($id, $lockMode = null, $lockVersion = null)
- * @method CobanTest|null findOneBy(array $criteria, array $orderBy = null)
- * @method CobanTest[]    findAll()
- * @method CobanTest[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method TrackEvent|null find($id, $lockMode = null, $lockVersion = null)
+ * @method TrackEvent|null findOneBy(array $criteria, array $orderBy = null)
+ * @method TrackEvent[]    findAll()
+ * @method TrackEvent[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CobanTestRepository extends ServiceEntityRepository
+class TrackEventRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CobanTest::class);
+        parent::__construct($registry, TrackEvent::class);
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(CobanTest $entity, bool $flush = true): void
+    public function add(TrackEvent $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
@@ -37,7 +37,7 @@ class CobanTestRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(CobanTest $entity, bool $flush = true): void
+    public function remove(TrackEvent $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
         if ($flush) {
@@ -46,15 +46,15 @@ class CobanTestRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return CobanTest[] Returns an array of CobanTest objects
+    //  * @return TrackEvent[] Returns an array of TrackEvent objects
     //  */
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
+            ->orderBy('t.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
@@ -63,10 +63,10 @@ class CobanTestRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?CobanTest
+    public function findOneBySomeField($value): ?TrackEvent
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()

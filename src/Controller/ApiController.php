@@ -2,7 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\CobanTest;
+use App\AppBundle\Coban;
+use App\Entity\DeviceResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,10 +23,9 @@ class ApiController extends AbstractController
         return new Response('server ok');
     }
 
-    #[Route('/parsetrack', name: 'parsetrack')]
-    public function parsetrack(Request $request, EntityManagerInterface $em): Response
+    #[Route('/getevent', methods:"POST")]
+    public function getevent(Request $request, EntityManagerInterface $em): Response
     {
-
         $encoders = [new XmlEncoder(), new JsonEncoder()];
         $normalizers = [new ObjectNormalizer()];
 
@@ -35,9 +35,7 @@ class ApiController extends AbstractController
         $data = $request->get('data');
         $key = $request->get('google_api_key');
 
-        $coban = new CobanTest();
-
-        $jsonContent = $serializer->serialize($coban->parse($data,$key), 'json');
+        $jsonContent = $serializer->serialize(Coban::parseResponse($data,$key), 'json');
 
         return new Response($jsonContent);
     }
