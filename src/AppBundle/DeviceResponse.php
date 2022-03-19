@@ -10,7 +10,7 @@ class DeviceResponse
 
     private $statusMsg;
 
-    private $response;
+    private $event;
 
     public function getDataType(): int
     {
@@ -53,14 +53,14 @@ class DeviceResponse
         $this->statusMsg = $statusMsg;
     }
 
-    public function getResponse()
+    public function getEvent()
     {
-        return $this->response;
+        return $this->event;
     }
 
-    public function setResponse($response): self
+    public function setEvent($event): self
     {
-        $this->response = $response;
+        $this->event = $event;
 
         return $this;
     }

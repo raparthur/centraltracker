@@ -21,7 +21,7 @@ class Coban extends AbstractDevice
                 $event = 'LOAD';
                 $deviceResponse->setStatusCode($statusCode);
                 $deviceResponse->setStatusMsg($statusMsg);
-                $deviceResponse->setResponse($event);
+                $deviceResponse->setEvent($event);
                 return $deviceResponse;
             case self::HEARTBEAT_TYPE:
                 $statusCode = 1;
@@ -29,7 +29,7 @@ class Coban extends AbstractDevice
                 $event = 'ON';
                 $deviceResponse->setStatusCode($statusCode);
                 $deviceResponse->setStatusMsg($statusMsg);
-                $deviceResponse->setResponse($event);
+                $deviceResponse->setEvent($event);
                 return $deviceResponse;
             case self::TRACK_TYPE:
                 $statusCode = 1;
@@ -44,7 +44,7 @@ class Coban extends AbstractDevice
                     $statusMsg = 'data log missing ";"';
                     $deviceResponse->setStatusCode($statusCode);
                     $deviceResponse->setStatusMsg($statusMsg);
-                    $deviceResponse->setResponse($event);
+                    $deviceResponse->setEvent($event);
                     return $deviceResponse;
                 }
 
@@ -58,7 +58,7 @@ class Coban extends AbstractDevice
                     $statusMsg = 'invalid track data';
                     $deviceResponse->setStatusCode($statusCode);
                     $deviceResponse->setStatusMsg($statusMsg);
-                    $deviceResponse->setResponse($event);
+                    $deviceResponse->setEvent($event);
                     return $deviceResponse;
                 }
 
@@ -69,7 +69,7 @@ class Coban extends AbstractDevice
                     $statusMsg = 'invalid imei';
                     $deviceResponse->setStatusCode($statusCode);
                     $deviceResponse->setStatusMsg($statusMsg);
-                    $deviceResponse->setResponse($event);
+                    $deviceResponse->setEvent($event);
                     return $deviceResponse;
                 }
 
@@ -101,7 +101,7 @@ class Coban extends AbstractDevice
                     $statusMsg = 'longitude must have 11 characters, it has '.strlen($longitude);
                     $deviceResponse->setStatusCode($statusCode);
                     $deviceResponse->setStatusMsg($statusMsg);
-                    $deviceResponse->setResponse($event);
+                    $deviceResponse->setEvent($event);
                     return $deviceResponse;
                 }
 
@@ -113,7 +113,7 @@ class Coban extends AbstractDevice
                     $statusMsg = 'localtime is unreadable';
                     $deviceResponse->setStatusCode($statusCode);
                     $deviceResponse->setStatusMsg($statusMsg);
-                    $deviceResponse->setResponse($event);
+                    $deviceResponse->setEvent($event);
                     return $deviceResponse;
                 }
 
@@ -142,7 +142,7 @@ class Coban extends AbstractDevice
                         $statusMsg = 'ERB parse error: '.$coord['error'];
                         $deviceResponse->setStatusCode($statusCode);
                         $deviceResponse->setStatusMsg($statusMsg);
-                        $deviceResponse->setResponse($event);
+                        $deviceResponse->setEvent($event);
                         return $deviceResponse;
                     }
                 }
@@ -163,7 +163,7 @@ class Coban extends AbstractDevice
                 $event->setDoorState($doorState == 1);
                 $event->setJammer($fstFuel);
                 $event->setTemperature($temperature);
-                $deviceResponse->setResponse($event);
+                $deviceResponse->setEvent($event);
                 return $deviceResponse;
             //#########################################################
             default:
@@ -172,7 +172,7 @@ class Coban extends AbstractDevice
                 $event = null;
                 $deviceResponse->setStatusCode($statusCode);
                 $deviceResponse->setStatusMsg($statusMsg);
-                $deviceResponse->setResponse($event);
+                $deviceResponse->setEvent($event);
                 return $deviceResponse;
 
         }
