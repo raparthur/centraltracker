@@ -23,7 +23,7 @@ class ApiController extends AbstractController
         return new Response('server ok');
     }
 
-    #[Route('/getevent', methods:"POST")]
+    #[Route('/getevent')]
     public function getevent(Request $request, EntityManagerInterface $em): Response
     {
         $encoders = [new XmlEncoder(), new JsonEncoder()];
