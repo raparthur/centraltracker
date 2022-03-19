@@ -12,7 +12,7 @@ class Coban extends AbstractDevice
         $dataType = self::extractDataType($data);
 
         $deviceResponse = new DeviceResponse();
-        $deviceResponse->setDataType($dataType);
+        $deviceResponse->setEventType($dataType);
 
         switch ($dataType){
             case self::LOGIN_TYPE:

@@ -4,7 +4,7 @@ namespace App\AppBundle;
 
 class DeviceResponse
 {
-    private $dataType;
+    private $eventType;
 
     private $statusCode;
 
@@ -12,14 +12,14 @@ class DeviceResponse
 
     private $event;
 
-    public function getDataType(): int
+    public function getEventType(): int
     {
-        return $this->dataType;
+        return $this->eventType;
     }
 
-    public function setDataType(int $dataType): self
+    public function setEventType(int $eventType): self
     {
-        $this->dataType = $dataType;
+        $this->eventType = $eventType;
 
         return $this;
     }
