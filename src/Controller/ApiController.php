@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\AppBundle\Coban;
-use App\Entity\DeviceResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +17,7 @@ use Symfony\Component\Serializer\Serializer;
 class ApiController extends AbstractController
 {
     /**
-     * @Route("/api", methods={"GET","POST"})
+     * @Route("/api", methods={"GET"})
      */
     public function index(): Response
     {
