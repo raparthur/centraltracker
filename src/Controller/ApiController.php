@@ -37,9 +37,11 @@ class ApiController extends AbstractController
         $port = $request->get('port');
         $data = $request->get('data');
         $key = $request->get('google_api_key');
+        /*
+                $jsonContent = $serializer->serialize(Coban::parseResponse($data,$key), 'json');
 
-        $jsonContent = $serializer->serialize(Coban::parseResponse($data,$key), 'json');
+                return new Response($jsonContent);*/
 
-        return new Response($jsonContent);
+        return new Response($port.' / '.$data.' / '.$key);
     }
 }
