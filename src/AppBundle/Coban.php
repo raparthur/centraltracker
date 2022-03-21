@@ -96,7 +96,7 @@ class Coban extends AbstractDevice
                 $accState = $logAy[14] ? 1 : 0;
                 $doorState = $logAy[15] ? 1 : 0;
 
-                if(strlen($longitude) != 11){
+                if(strtolower($gpsIsValid) == 'f' && strlen($longitude) != 11){
                     $statusCode = -13;
                     $statusMsg = 'longitude must have 11 characters, it has '.strlen($longitude);
                     $deviceResponse->setStatusCode($statusCode);
