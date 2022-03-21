@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Serializer;
 class ApiController extends AbstractController
 {
     /**
-     * @Route("/", methods={"GET","POST"})
+     * @Route("/", methods={"POST"})
      */
     public function index(): Response
     {
