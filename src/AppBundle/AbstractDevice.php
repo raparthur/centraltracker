@@ -10,16 +10,25 @@ abstract class AbstractDevice implements DeviceInterface
         if (empty($lat) || empty($long) || empty($sn) || empty($ew)) {
             return array(false, false);
         }
+        /*
         $latDg = substr($lat, 0, 2);
         $latMin = substr($lat, 2);
         $longDg = substr($long, 0, 3);
-        $longMin = substr($long, 3);
+        $longMin = substr($long, 3);*/
 
-        $latMin = round($latMin / 60, 6);
-        $longMin = round($longMin / 60, 6);
+        $DegreeMinLat = explode(".",$lat);
+        $dgLat = intval($DegreeMinLat[0]/100);
+        $minLat = substr($DegreeMinLat[0], -2).$DegreeMinLat[1];
 
-        $latitude = strtolower($sn) == 'n' ? $latDg + $latMin : -($latDg + $latMin);
-        $longitude = strtolower($ew) == 'e' ? $longDg + $longMin : -($longDg + $longMin);
+        $DegreeMinLong = explode(".",$long);
+        $dgLong = intval($DegreeMinLong[0]/100);
+        $minLong = substr($DegreeMinLong[0], -2).$DegreeMinLong[1];
+
+        $minLat = round($minLat / 60, 6);
+        $minLong = round($minLong / 60, 6);
+
+        $latitude = strtolower($sn) == 'n' ? $dgLat + $minLat : -($dgLat + $minLat);
+        $longitude = strtolower($ew) == 'e' ? $dgLong + $minLong : -($dgLong + $minLong);
 
         return array($latitude, $longitude);
     }
