@@ -179,4 +179,28 @@ class Coban extends AbstractDevice
 
     }
 
+    static function extractDataType($data): int{
+
+        $data = trim($data);
+
+        //Matching parts of string. Must maintain the following check order since the first is contained in the next
+
+        //check login: ##,imei:{var},A;
+        if(strlen($data) == 26 && strpos($data, "##,imei:") !== false && strpos($data, ",A;") !== false){
+            return self::LOGIN_TYPE;
+        }
+
+        //check track: imei:{var};
+        if(strpos($data, "imei:") !== false && strpos($data, ";") !== false){
+            return self::TRACK_TYPE;
+        }
+
+        //check heartbeat: {var};
+        if(strlen($data) == 16 && strpos($data, ";") !== false){
+            return self::HEARTBEAT_TYPE;
+        }
+
+        return self::UNDEFINED_TYPE;
+    }
+
 }

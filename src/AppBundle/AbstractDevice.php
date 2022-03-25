@@ -2,33 +2,36 @@
 
 namespace App\AppBundle;
 
-abstract class AbstractDevice implements DeviceInterface
+abstract class AbstractDevice
 {
+
+    const UNDEFINED_TYPE = 0;
+    const LOGIN_TYPE = 1;
+    const HEARTBEAT_TYPE = 2;
+    const TRACK_TYPE = 3;
+
+    abstract static function parseResponse(string $data, string $googleApiKey): DeviceResponse;
+    abstract static function extractDataType(string $data): int;
 
     static protected function gps2Map($lat, $long, $sn, $ew)
     {
         if (empty($lat) || empty($long) || empty($sn) || empty($ew)) {
             return array(false, false);
         }
-        /*
-        $latDg = substr($lat, 0, 2);
-        $latMin = substr($lat, 2);
-        $longDg = substr($long, 0, 3);
-        $longMin = substr($long, 3);*/
-
         $DegreeMinLat = explode(".",$lat);
         $dgLat = intval($DegreeMinLat[0]/100);
-        $minLat = substr($DegreeMinLat[0], -2).$DegreeMinLat[1];
+        $minLat = substr($DegreeMinLat[0], -2).'.'.$DegreeMinLat[1];
+        $minLat = round($minLat/60,6);
+        $latitude = $dgLat+$minLat;
 
         $DegreeMinLong = explode(".",$long);
         $dgLong = intval($DegreeMinLong[0]/100);
-        $minLong = substr($DegreeMinLong[0], -2).$DegreeMinLong[1];
+        $minLong = substr($DegreeMinLong[0], -2).'.'.$DegreeMinLong[1];
+        $minLong = round($minLong/60,6);
+        $longitude = $dgLong+$minLong;
 
-        $minLat = round($minLat / 60, 6);
-        $minLong = round($minLong / 60, 6);
-
-        $latitude = strtolower($sn) == 'n' ? $dgLat + $minLat : -($dgLat + $minLat);
-        $longitude = strtolower($ew) == 'e' ? $dgLong + $minLong : -($dgLong + $minLong);
+        $latitude = strtolower($sn) == 'n' ? $latitude : -$latitude;
+        $longitude = strtolower($ew) == 'e' ? $longitude : -$longitude;
 
         return array($latitude, $longitude);
     }
@@ -133,30 +136,6 @@ abstract class AbstractDevice implements DeviceInterface
             'latitude' => $lat,
             'longitude' => $lng
         ];
-    }
-
-    static function extractDataType($data): int{
-
-        $data = trim($data);
-
-        //Matching parts of string. Must maintain the following check order since the first is contained in the next
-
-        //check login: ##,imei:{var},A;
-        if(strlen($data) == 26 && strpos($data, "##,imei:") !== false && strpos($data, ",A;") !== false){
-            return self::LOGIN_TYPE;
-        }
-
-        //check track: imei:{var};
-        if(strpos($data, "imei:") !== false && strpos($data, ";") !== false){
-            return self::TRACK_TYPE;
-        }
-
-        //check heartbeat: {var};
-        if(strlen($data) == 16 && strpos($data, ";") !== false){
-            return self::HEARTBEAT_TYPE;
-        }
-
-        return self::UNDEFINED_TYPE;
     }
 
 }
