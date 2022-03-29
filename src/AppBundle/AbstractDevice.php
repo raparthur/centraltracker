@@ -36,7 +36,7 @@ abstract class AbstractDevice
         return array($latitude, $longitude);
     }
 
-    static protected function erb2Map($googleGeoApiKey, $cid, $lac, $mcc = 724, $mnc = 18)
+    static protected function erb2Map($googleGeoApiKey, $cid, $lac, $mcc = 724, $mnc = 05)
     {
 
         if (empty($cid) || empty($lac)) {
