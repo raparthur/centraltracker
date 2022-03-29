@@ -106,7 +106,7 @@ class Coban extends AbstractDevice
                     return $deviceResponse;
                 }
 
-                try{
+                if($localTime && count($localTime) == 12){
                     $strdate = '20'.$localTime[0].$localTime[1].'-'.$localTime[2].$localTime[3].'-'.$localTime[4].$localTime[5].
                         ' '.$localTime[6].$localTime[7].':'.$localTime[8].$localTime[9].':'.$localTime[10].$localTime[11];
 
@@ -120,7 +120,7 @@ class Coban extends AbstractDevice
                         $event->setDeviceTime($strdate);
                     }
 
-                } catch (RuntimeError $e){
+                } else {
                     $statusCode = 3;
                     $statusMsg = 'localtime is unreadable';
                     $deviceResponse->setStatusCode($statusCode);
