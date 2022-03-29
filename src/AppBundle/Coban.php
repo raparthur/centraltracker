@@ -4,6 +4,7 @@
 namespace App\AppBundle;
 
 use App\Entity\TrackEvent;
+use Twig\Error\RuntimeError;
 
 class Coban extends AbstractDevice
 {
@@ -105,17 +106,28 @@ class Coban extends AbstractDevice
                     return $deviceResponse;
                 }
 
-                $strdate = '20'.$localTime[0].$localTime[1].'-'.$localTime[2].$localTime[3].'-'.$localTime[4].$localTime[5].
-                    ' '.$localTime[6].$localTime[7].':'.$localTime[8].$localTime[9].':'.$localTime[10].$localTime[11];
+                try{
+                    $strdate = '20'.$localTime[0].$localTime[1].'-'.$localTime[2].$localTime[3].'-'.$localTime[4].$localTime[5].
+                        ' '.$localTime[6].$localTime[7].':'.$localTime[8].$localTime[9].':'.$localTime[10].$localTime[11];
 
-                if(!strtotime($strdate)){
-                    $statusCode = -14;
+                    if(!strtotime($strdate)){
+                        $statusCode = 3;
+                        $statusMsg = 'localtime is unreadable';
+                        $deviceResponse->setStatusCode($statusCode);
+                        $deviceResponse->setStatusMsg($statusMsg);
+                        $event->setDeviceTime(null);
+                    } else {
+                        $event->setDeviceTime($strdate);
+                    }
+
+                } catch (RuntimeError $e){
+                    $statusCode = 3;
                     $statusMsg = 'localtime is unreadable';
                     $deviceResponse->setStatusCode($statusCode);
                     $deviceResponse->setStatusMsg($statusMsg);
-                    $deviceResponse->setEvent($event);
-                    return $deviceResponse;
+                    $event->setDeviceTime(null);
                 }
+
 
                 //####### VALIDATION PASSED FROM HERE ON ##########
                 $fstFuel = str_replace('%', '', $logAy[16]);
@@ -138,7 +150,7 @@ class Coban extends AbstractDevice
                         $latitude = $coord['latitude'];
                         $longitude = $coord['longitude'];
                     } else {
-                        $statusCode = -15;
+                        $statusCode = -16;
                         $statusMsg = 'ERB parse error: '.$coord['error'];
                         $deviceResponse->setStatusCode($statusCode);
                         $deviceResponse->setStatusMsg($statusMsg);
@@ -152,7 +164,6 @@ class Coban extends AbstractDevice
                 $event->setImei($imei);
                 $event->setSimCard($cellphone);
                 $event->setKeyword($keyword);
-                $event->setDeviceTime($strdate);
                 $event->setIsFromGps(strtolower($gpsIsValid) == 'f');
                 $event->setLatitude($latitude);
                 $event->setLongitude($longitude);
