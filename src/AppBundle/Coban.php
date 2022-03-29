@@ -106,7 +106,7 @@ class Coban extends AbstractDevice
                     return $deviceResponse;
                 }
 
-                if($localTime && count($localTime) == 12){
+                if($localTime && is_array($localTime) && count($localTime) == 12){
                     $strdate = '20'.$localTime[0].$localTime[1].'-'.$localTime[2].$localTime[3].'-'.$localTime[4].$localTime[5].
                         ' '.$localTime[6].$localTime[7].':'.$localTime[8].$localTime[9].':'.$localTime[10].$localTime[11];
 
