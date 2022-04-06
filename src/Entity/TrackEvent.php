@@ -59,6 +59,9 @@ class TrackEvent
     #[ORM\Column(type: 'datetime')]
     private $createdAt;
 
+    #[ORM\Column(type: 'smallint', nullable: true)]
+    private $towerSignal;
+
 
     public function getId(): ?int
     {
@@ -241,6 +244,18 @@ class TrackEvent
     public function setCreatedAt(string $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getTowerSignal(): ?int
+    {
+        return $this->towerSignal;
+    }
+
+    public function setTowerSignal(?int $towerSignal): self
+    {
+        $this->towerSignal = $towerSignal;
 
         return $this;
     }

@@ -173,6 +173,7 @@ class Coban extends AbstractDevice
                 $event->setAccState($accState == 1);
                 $event->setDoorState($doorState == 1);
                 $event->setJammer($fstFuel);
+                $event->setTowerSignal($secFuel);
                 $event->setTemperature($temperature);
                 $deviceResponse->setEvent($event);
                 return $deviceResponse;
