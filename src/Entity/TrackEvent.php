@@ -248,7 +248,7 @@ class TrackEvent
         return $this;
     }
 
-    public function getTowerSignal(): ?int
+    public function getTowerSignal(): ?string
     {
         return $this->towerSignal;
     }
