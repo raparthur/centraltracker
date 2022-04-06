@@ -253,7 +253,7 @@ class TrackEvent
         return $this->towerSignal;
     }
 
-    public function setTowerSignal(?int $towerSignal): self
+    public function setTowerSignal(?string $towerSignal): self
     {
         $this->towerSignal = $towerSignal;
 
