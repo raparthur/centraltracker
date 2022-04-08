@@ -12,6 +12,8 @@ class DeviceResponse
 
     private $event;
 
+    private $createdAt;
+
     public function getEventType(): int
     {
         return $this->eventType;
@@ -65,8 +67,22 @@ class DeviceResponse
         return $this;
     }
 
+
+
     public function __toString()
     {
         return "[".$this->getStatusCode()."]".$this->getStatusMsg();
+    }
+
+    public function getCreatedAt(): ?string
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(string $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
     }
 }

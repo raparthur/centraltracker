@@ -3,6 +3,8 @@
 
 namespace App\AppBundle;
 
+use App\Entity\HeartbeatEvent;
+use App\Entity\LoginEvent;
 use App\Entity\TrackEvent;
 use Twig\Error\RuntimeError;
 
@@ -14,38 +16,50 @@ class Coban extends AbstractDevice
 
         $deviceResponse = new DeviceResponse();
         $deviceResponse->setEventType($dataType);
+        $dt = new \DateTime("now", new \DateTimeZone('America/Sao_Paulo'));
+        $deviceResponse->setCreatedAt($dt->format("Y-m-d H:i:s"));
 
         switch ($dataType){
-            case self::LOGIN_TYPE:
-                $statusCode = 1;
-                $statusMsg = 'success';
-                $event = 'LOAD';
-                $deviceResponse->setStatusCode($statusCode);
-                $deviceResponse->setStatusMsg($statusMsg);
-                $deviceResponse->setEvent($event);
+            case LoginEvent::TYPE:
+                $event = new LoginEvent();
+                $imei = substr($data, strpos($data, "##,imei:")+8,  15);
+                if($imei && is_numeric($imei)){
+                    $event->setImei($imei); //todo
+                    $event->setResponse('LOAD');
+                    $deviceResponse->setStatusCode(1);
+                    $deviceResponse->setStatusMsg('success');
+                    $deviceResponse->setEvent($event);
+                } else {
+                    $statusCode = -12;
+                    $statusMsg = 'invalid imei';
+                    $deviceResponse->setStatusCode($statusCode);
+                    $deviceResponse->setStatusMsg($statusMsg);
+                }
                 return $deviceResponse;
-            case self::HEARTBEAT_TYPE:
-                $statusCode = 1;
-                $statusMsg = 'success';
-                $event = 'ON';
-                $deviceResponse->setStatusCode($statusCode);
-                $deviceResponse->setStatusMsg($statusMsg);
-                $deviceResponse->setEvent($event);
+            case HeartbeatEvent::TYPE:
+                $event = new LoginEvent();
+                $imei = substr($data, 0,  15);
+                if($imei && is_numeric($imei)){
+                    $event->setImei($imei); //todo
+                    $event->setResponse('ON');
+                    $deviceResponse->setStatusCode(1);
+                    $deviceResponse->setStatusMsg('success');
+                    $deviceResponse->setEvent($event);
+                } else {
+                    $statusCode = -12;
+                    $statusMsg = 'invalid imei';
+                    $deviceResponse->setStatusCode($statusCode);
+                    $deviceResponse->setStatusMsg($statusMsg);
+                }
                 return $deviceResponse;
-            case self::TRACK_TYPE:
-                $statusCode = 1;
-                $statusMsg = 'success';
-                $event = new TrackEvent();
-                $dt = new \DateTime("now", new \DateTimeZone('America/Sao_Paulo'));
-                $event->setCreatedAt($dt->format("Y-m-d H:i:s"));
+            case TrackEvent::TYPE:
                 //########### TRACK INPUT VALIDATION ###############
-                //must contain 19 data block separated by commas to be a status
+                //must contain 19 data block separated by commas
                 if (strlen($data) && $data[strlen($data)-1] != ";") {
                     $statusCode = -10;
                     $statusMsg = 'data log missing ";"';
                     $deviceResponse->setStatusCode($statusCode);
                     $deviceResponse->setStatusMsg($statusMsg);
-                    $deviceResponse->setEvent($event);
                     return $deviceResponse;
                 }
 
@@ -59,7 +73,6 @@ class Coban extends AbstractDevice
                     $statusMsg = 'invalid track data';
                     $deviceResponse->setStatusCode($statusCode);
                     $deviceResponse->setStatusMsg($statusMsg);
-                    $deviceResponse->setEvent($event);
                     return $deviceResponse;
                 }
 
@@ -70,14 +83,14 @@ class Coban extends AbstractDevice
                     $statusMsg = 'invalid imei';
                     $deviceResponse->setStatusCode($statusCode);
                     $deviceResponse->setStatusMsg($statusMsg);
-                    $deviceResponse->setEvent($event);
                     return $deviceResponse;
                 }
 
                 //####### SUCCESS, BUT HAS ONLY 13 FIELDS ############
-                if ($statusCode == 1 && count($logAy) == 13) {
+                if (count($logAy) == 13) {
                     $logAy[13] = $logAy[14] = $logAy[15] = $logAy[16] = $logAy[17] = $logAy[18] = "";
-                    $statusCode = 2;
+                    $deviceResponse->setStatusCode(2);
+                    $deviceResponse->setStatusMsg('track log has only 13 fields');
                 }
                 //####################################################
 
@@ -102,9 +115,10 @@ class Coban extends AbstractDevice
                     $statusMsg = 'longitude must have at least 9 characters, it has '.strlen($longitude);
                     $deviceResponse->setStatusCode($statusCode);
                     $deviceResponse->setStatusMsg($statusMsg);
-                    $deviceResponse->setEvent($event);
                     return $deviceResponse;
                 }
+
+                $event = new TrackEvent();
 
                 if($localTime && is_array($localTime) && count($localTime) == 12){
                     $strdate = '20'.$localTime[0].$localTime[1].'-'.$localTime[2].$localTime[3].'-'.$localTime[4].$localTime[5].
@@ -130,6 +144,7 @@ class Coban extends AbstractDevice
 
 
                 //####### VALIDATION PASSED FROM HERE ON ##########
+
                 $fstFuel = str_replace('%', '', $logAy[16]);
                 $secFuel = str_replace('%', '', $logAy[17]);
                 if (is_numeric($logAy[18])) {
@@ -154,13 +169,14 @@ class Coban extends AbstractDevice
                         $statusMsg = 'ERB parse error: '.$coord['error'];
                         $deviceResponse->setStatusCode($statusCode);
                         $deviceResponse->setStatusMsg($statusMsg);
-                        $deviceResponse->setEvent($event);
                         return $deviceResponse;
                     }
                 }
 
-                $deviceResponse->setStatusMsg($statusMsg);
+                $statusCode = 1;
+                $statusMsg = 'success';
                 $deviceResponse->setStatusCode($statusCode);
+                $deviceResponse->setStatusMsg($statusMsg);
                 $event->setImei($imei);
                 $event->setSimCard($cellphone);
                 $event->setKeyword($keyword);
@@ -184,7 +200,6 @@ class Coban extends AbstractDevice
                 $event = null;
                 $deviceResponse->setStatusCode($statusCode);
                 $deviceResponse->setStatusMsg($statusMsg);
-                $deviceResponse->setEvent($event);
                 return $deviceResponse;
 
         }
@@ -199,20 +214,20 @@ class Coban extends AbstractDevice
 
         //check login: ##,imei:{var},A;
         if(strlen($data) == 26 && strpos($data, "##,imei:") !== false && strpos($data, ",A;") !== false){
-            return self::LOGIN_TYPE;
+            return LoginEvent::TYPE;
         }
 
         //check track: imei:{var};
-        if(strpos($data, "imei:") !== false && strpos($data, ";") !== false){
-            return self::TRACK_TYPE;
+        if(strlen($data) > 34 && strpos($data, "imei:") !== false && strpos($data, ";") !== false){
+            return TrackEvent::TYPE;
         }
 
         //check heartbeat: {var};
         if(strlen($data) == 16 && strpos($data, ";") !== false){
-            return self::HEARTBEAT_TYPE;
+            return HeartbeatEvent::TYPE;
         }
 
-        return self::UNDEFINED_TYPE;
+        return 0;
     }
 
 }

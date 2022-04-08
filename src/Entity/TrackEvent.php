@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 //todo set ORM params correctly before persist
 class TrackEvent
 {
+    const TYPE = 3;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -232,18 +234,6 @@ class TrackEvent
     public function setTemperature(?string $temperature): self
     {
         $this->temperature = $temperature;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?string
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(string $createdAt): self
-    {
-        $this->createdAt = $createdAt;
 
         return $this;
     }
