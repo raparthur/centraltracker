@@ -55,6 +55,18 @@ class DeviceResponse
         $this->statusMsg = $statusMsg;
     }
 
+    public function getCreatedAt(): ?string
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(string $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
     public function getEvent()
     {
         return $this->event;
@@ -74,15 +86,4 @@ class DeviceResponse
         return "[".$this->getStatusCode()."]".$this->getStatusMsg();
     }
 
-    public function getCreatedAt(): ?string
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(string $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
 }
