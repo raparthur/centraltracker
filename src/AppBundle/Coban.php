@@ -18,6 +18,7 @@ class Coban extends AbstractDevice
         $deviceResponse->setEventType($dataType);
         $dt = new \DateTime("now", new \DateTimeZone('America/Sao_Paulo'));
         $deviceResponse->setCreatedAt($dt->format("Y-m-d H:i:s"));
+        $data = trim($data);
 
         switch ($dataType){
             case LoginEvent::TYPE:
@@ -120,7 +121,7 @@ class Coban extends AbstractDevice
 
                 $event = new TrackEvent();
 
-                if($localTime && is_array($localTime) && count($localTime) == 12){
+                if($localTime && strlen($localTime) == 12){
                     $strdate = '20'.$localTime[0].$localTime[1].'-'.$localTime[2].$localTime[3].'-'.$localTime[4].$localTime[5].
                         ' '.$localTime[6].$localTime[7].':'.$localTime[8].$localTime[9].':'.$localTime[10].$localTime[11];
 
@@ -140,6 +141,7 @@ class Coban extends AbstractDevice
                     $deviceResponse->setStatusCode($statusCode);
                     $deviceResponse->setStatusMsg($statusMsg);
                     $event->setDeviceTime(null);
+                    exit($localTime);
                 }
 
 
