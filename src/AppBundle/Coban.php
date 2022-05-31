@@ -56,6 +56,7 @@ class Coban extends AbstractDevice
             case TrackEvent::TYPE:
                 //########### TRACK INPUT VALIDATION ###############
                 $statusCode = 1;
+                $statusMsg = 'success';
                 //must contain 19 data block separated by commas
                 if (strlen($data) && $data[strlen($data)-1] != ";") {
                     $statusCode = -10;
@@ -176,7 +177,6 @@ class Coban extends AbstractDevice
                 }
 
                 //if status code is not defined yet
-                $statusMsg = 'success';
                 $deviceResponse->setStatusCode($statusCode);
                 $deviceResponse->setStatusMsg($statusMsg);
                 $event->setImei($imei);
