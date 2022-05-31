@@ -141,7 +141,6 @@ class Coban extends AbstractDevice
                     $deviceResponse->setStatusCode($statusCode);
                     $deviceResponse->setStatusMsg($statusMsg);
                     $event->setDeviceTime($deviceResponse->getCreatedAt());
-                    exit($localTime);
                 }
 
 
