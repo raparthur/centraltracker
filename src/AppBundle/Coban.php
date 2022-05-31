@@ -127,20 +127,20 @@ class Coban extends AbstractDevice
 
                     if(!strtotime($strdate)){
                         $statusCode = 3;
-                        $statusMsg = 'localtime is unreadable';
+                        $statusMsg = 'could not get device time, replaced by server time instead';
                         $deviceResponse->setStatusCode($statusCode);
                         $deviceResponse->setStatusMsg($statusMsg);
-                        $event->setDeviceTime(null);
+                        $event->setDeviceTime($deviceResponse->getCreatedAt());
                     } else {
                         $event->setDeviceTime($strdate);
                     }
 
                 } else {
                     $statusCode = 3;
-                    $statusMsg = 'localtime is unreadable';
+                    $statusMsg = 'could not get device time, replaced by server time instead';
                     $deviceResponse->setStatusCode($statusCode);
                     $deviceResponse->setStatusMsg($statusMsg);
-                    $event->setDeviceTime(null);
+                    $event->setDeviceTime($deviceResponse->getCreatedAt());
                     exit($localTime);
                 }
 
