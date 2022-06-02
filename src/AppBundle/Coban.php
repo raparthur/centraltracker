@@ -128,21 +128,31 @@ class Coban extends AbstractDevice
                         ' '.$localTime[6].$localTime[7].':'.$localTime[8].$localTime[9].':'.$localTime[10].$localTime[11];
 
                     if(!strtotime($strdate)){
-                        $statusCode = 3;
+                        /*$statusCode = 3;
                         $statusMsg = 'could not get device time, replaced by server time instead';
                         $deviceResponse->setStatusCode($statusCode);
                         $deviceResponse->setStatusMsg($statusMsg);
-                        $event->setDeviceTime($deviceResponse->getCreatedAt());
+                        $event->setDeviceTime($deviceResponse->getCreatedAt());*/
+                        $statusCode = -15;
+                        $statusMsg = 'could not get device time';
+                        $deviceResponse->setStatusCode($statusCode);
+                        $deviceResponse->setStatusMsg($statusMsg);
+                        return $deviceResponse;
                     } else {
                         $event->setDeviceTime($strdate);
                     }
 
                 } else {
-                    $statusCode = 3;
+                    $statusCode = -15;
+                    $statusMsg = 'could not get device time';
+                    $deviceResponse->setStatusCode($statusCode);
+                    $deviceResponse->setStatusMsg($statusMsg);
+                    return $deviceResponse;
+    /*                $statusCode = 3;
                     $statusMsg = 'could not get device time, replaced by server time instead';
                     $deviceResponse->setStatusCode($statusCode);
                     $deviceResponse->setStatusMsg($statusMsg);
-                    $event->setDeviceTime($deviceResponse->getCreatedAt());
+                    $event->setDeviceTime($deviceResponse->getCreatedAt());*/
                 }
 
 
