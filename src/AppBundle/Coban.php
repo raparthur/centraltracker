@@ -101,7 +101,7 @@ class Coban extends AbstractDevice
                 $localTime = $logAy[2];
                 $cellphone = $logAy[3];
                 $gpsIsValid = $logAy[4];
-                $utc = $logAy[5];
+                $utc =$logAy[5];
                 $av = $logAy[6];
                 $latitude = $logAy[7];
                 $sn = $logAy[8];
@@ -128,31 +128,38 @@ class Coban extends AbstractDevice
                         ' '.$localTime[6].$localTime[7].':'.$localTime[8].$localTime[9].':'.$localTime[10].$localTime[11];
 
                     if(!strtotime($strdate)){
-                        /*$statusCode = 3;
-                        $statusMsg = 'could not get device time, replaced by server time instead';
-                        $deviceResponse->setStatusCode($statusCode);
-                        $deviceResponse->setStatusMsg($statusMsg);
-                        $event->setDeviceTime($deviceResponse->getCreatedAt());*/
-                        $statusCode = -15;
+                        $statusCode = 3;
                         $statusMsg = 'could not get device time';
                         $deviceResponse->setStatusCode($statusCode);
                         $deviceResponse->setStatusMsg($statusMsg);
-                        return $deviceResponse;
                     } else {
                         $event->setDeviceTime($strdate);
                     }
 
                 } else {
-                    $statusCode = -15;
+                    $statusCode = 3;
                     $statusMsg = 'could not get device time';
                     $deviceResponse->setStatusCode($statusCode);
                     $deviceResponse->setStatusMsg($statusMsg);
-                    return $deviceResponse;
-    /*                $statusCode = 3;
-                    $statusMsg = 'could not get device time, replaced by server time instead';
-                    $deviceResponse->setStatusCode($statusCode);
-                    $deviceResponse->setStatusMsg($statusMsg);
-                    $event->setDeviceTime($deviceResponse->getCreatedAt());*/
+                }
+
+                $utc = trim(substr($utc, 0, strpos($utc, ".")));
+
+                if($utc && strlen($utc) == 6){
+                    $utcDate = new \DateTime("now", new \DateTimeZone('Atlantic/St_Helena')); //Greenwich
+
+                    $utcDate = $utcDate->format('Y-m-d').' '.$utc[0].$utc[1].':'.$utc[2].$utc[3].':'.$utc[4].$utc[5];
+
+                    if(!strtotime($utcDate)){
+                        $statusCode = 4;
+                        $statusMsg = 'could not get gmt time';
+                    } else {
+                        $event->setUtcTime($utcDate);
+                    }
+
+                } else {
+                    $statusCode = 4;
+                    $statusMsg = 'could not get gmt time';
                 }
 
 

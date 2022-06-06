@@ -64,6 +64,9 @@ class TrackEvent
     #[ORM\Column(type: 'smallint', nullable: true)]
     private $towerSignal;
 
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $utcTime;
+
 
     public function getId(): ?int
     {
@@ -249,4 +252,22 @@ class TrackEvent
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getUtcTime()
+    {
+        return $this->utcTime;
+    }
+
+    /**
+     * @param mixed $utcTime
+     */
+    public function setUtcTime($utcTime): void
+    {
+        $this->utcTime = $utcTime;
+    }
+
+
 }
