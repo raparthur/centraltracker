@@ -16,7 +16,7 @@ class Coban extends AbstractDevice
 
         $deviceResponse = new DeviceResponse();
         $deviceResponse->setEventType($dataType);
-        $dt = new \DateTime("now", new \DateTimeZone('America/Sao_Paulo'));
+        $dt = new \DateTime("now", new \DateTimeZone("Atlantic/St_Helena"));
         $deviceResponse->setCreatedAt($dt->format("Y-m-d H:i:s"));
         $data = trim($data);
 
